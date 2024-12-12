@@ -1,0 +1,24 @@
+{
+  "name": "appkey-webauthn",
+  "version": "1.0.1",
+  "description": "AppKey API service for passkey web authentication in NodeJS ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cosync/AppKey-WebAuthn.git"
+  },
+  "keywords": [
+    "AppKey",
+    "Passkey",
+    "Authentication"
+  ],
+  "author": "Cosync Inc",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Cosync/AppKey-WebAuthn/issues"
+  },
+  "homepage": "https://github.com/Cosync/AppKey-WebAuthn#readme"
+}
