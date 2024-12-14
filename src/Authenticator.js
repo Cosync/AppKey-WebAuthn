@@ -86,21 +86,22 @@ module.exports = class Login {
      * } attestation 
      * @returns 
      */
-    loginAnonymousComplete(assertion){
+    loginAnonymousComplete(attestation){
         return new Promise((resolve, reject) => { 
             try { 
-                let valid = assertion.handle && 
-                            assertion.id && 
-                            assertion.rawId && 
-                            assertion.response.clientDataJSON && 
-                            assertion.response.attestationObject && 
-                            assertion.type;
+                let valid = attestation.handle && 
+                            attestation.id && 
+                            attestation.rawId && 
+                            attestation.response &&
+                            attestation.response.clientDataJSON && 
+                            attestation.response.attestationObject && 
+                            attestation.type;
                 if(!valid){
-                    reject({message:"invalid assertion"})
+                    reject({message:"invalid attestation"})
                     return
-                }
-
-                this.apiService.request('POST', '/api/appuser/loginAnonymousComplete', assertion).then(result => {
+                } 
+                
+                this.apiService.request('POST', '/api/appuser/loginAnonymousComplete', attestation).then(result => {
                     if(result.code) reject(result);
                     else{ 
                         _user = result;
@@ -176,6 +177,7 @@ module.exports = class Login {
                 let valid = attestation.handle && 
                             attestation.id && 
                             attestation.rawId && 
+                            attestation.response &&
                             attestation.response.clientDataJSON && 
                             attestation.response.attestationObject && 
                             attestation.type;
