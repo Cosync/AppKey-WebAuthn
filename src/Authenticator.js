@@ -210,13 +210,13 @@ module.exports = class Login {
     signupComplete(data){
         return new Promise((resolve, reject) => {
             try { 
-                let valid = data.handle && data.code; 
+                let valid = data.signupToken && data.code; 
                 if(!valid){
                     reject({message:"invalid singup data"})
                     return
                 }
                 
-                this.apiService.request('POST', '/api/appuser/signupComplete', data).then(result => {
+                this.apiService.request('POST', '/api/appuser/signupComplete', {code:data.code}).then(result => {
                     if(result.code) reject(result);
                     else { 
                         _user = result;
