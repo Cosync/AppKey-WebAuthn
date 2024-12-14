@@ -140,6 +140,8 @@ module.exports = class Login {
                     return
                 }
 
+                data.handle = data.handle.toLowerCase();
+
                 this.apiService.request('POST', '/api/appuser/signup', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
@@ -187,7 +189,8 @@ module.exports = class Login {
                     return
                 }
 
-
+                attestation.handle = attestation.handle.toLowerCase();
+                
                 this.apiService.request('POST','/api/appuser/signupConfirm', attestation).then(result => {
                     if(result.code) reject(result);
                     else { 
@@ -246,7 +249,7 @@ module.exports = class Login {
                     reject({message:"invalid login data"})
                     return
                 }
-
+                data.handle = data.handle.toLowerCase();
                 this.apiService.request('POST', '/api/appuser/login', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
@@ -391,7 +394,7 @@ module.exports = class Login {
                     reject({message:"invalid data"})
                     return
                 }
-
+                data.handle = data.handle.toLowerCase();
                 this.apiService.request('POST', '/api/appuser/verify', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
