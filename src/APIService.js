@@ -26,6 +26,7 @@
 
 
 let _user = {};
+let _signData = {};
 
 module.exports  = class APIService {
     
@@ -56,6 +57,14 @@ module.exports  = class APIService {
     get user (){
         return _user
     }
+
+    set signData (data){
+        _signData = data
+    }
+
+    get signData (){
+        return _signData
+    }
  
 
     /**
@@ -80,7 +89,7 @@ module.exports  = class APIService {
                 if(method != "GET" && data) option.body = JSON.stringify(data);  
         
                 if(_user && _user['access-token']) option.headers['access-token'] = _user['access-token'];
-                else if (data && data.signupToken) option.headers['signup-token'] = data.signupToken;
+                else if (_signData && _signData['signup-token']) option.headers['signup-token'] = _signData['signup-token'];
                 else option.headers['app-token'] = this.appkeyConfig.appToken; 
         
                 fetch(`${this.appkeyConfig.apiUrl}${endpoint}`, option)

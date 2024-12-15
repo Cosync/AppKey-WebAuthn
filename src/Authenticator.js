@@ -194,6 +194,7 @@ module.exports = class Login {
                 this.apiService.request('POST','/api/appuser/signupConfirm', attestation).then(result => {
                     if(result.code) reject(result);
                     else { 
+                        this.apiService.signData = result;
                         resolve(result);
                     } 
                 }).catch((error) => reject(error)); 
@@ -213,7 +214,7 @@ module.exports = class Login {
     signupComplete(data){
         return new Promise((resolve, reject) => {
             try { 
-                let valid = data.signupToken && data.code; 
+                let valid = data.code; 
                 if(!valid){
                     reject({message:"invalid singup data"})
                     return
@@ -224,6 +225,8 @@ module.exports = class Login {
                     else { 
                         _user = result;
                         this.apiService.user = _user;
+                        this.apiService.signData = null;
+                        
                         resolve(result);
                     } 
                 }).catch((error) => reject(error)); 

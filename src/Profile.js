@@ -113,11 +113,14 @@ module.exports = class Profile {
     setUserName(data){
         return new Promise((resolve, reject) => {  
             try {
-                let valid = data.userName;
-                if(!valid){
+               
+                if(!data.userName){
                     reject({message:"invalid data"});
                     return
                 } 
+
+                data.userName = data.userName.toLowerCase(); 
+
                 this.apiService.request('POST', '/api/appuser/setUserName', data).then(result => { 
                     if(result.code) reject(result);
                     else resolve(result);
@@ -138,12 +141,14 @@ module.exports = class Profile {
     userNameAvailable(data){
         return new Promise((resolve, reject) => {  
             try {
-                let valid = data.userName;
-                if(!valid){
+                
+                if(!data.userName){
                     reject({message:"invalid data"});
                     return
                 } 
-            
+
+                data.userName = data.userName.toLowerCase(); 
+                
                 this.apiService.request('GET', `/api/appuser/userNameAvailable?userName=${data.userName}`).then(result => { 
                     if(result.code) reject(result);
                     else resolve(result);
