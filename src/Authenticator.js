@@ -30,7 +30,7 @@
 
 let _user = null;
 
-module.exports = class Login { 
+module.exports = class Authenticator { 
 
     /**
      * 
@@ -86,10 +86,10 @@ module.exports = class Login {
      * } attestation 
      * @returns 
      */
-    loginAnonymousComplete(attestation){
+    loginAnonymousComplete(handle, attestation){
         return new Promise((resolve, reject) => { 
             try { 
-                let valid = attestation.handle && 
+                let valid = handle && 
                             attestation.id && 
                             attestation.rawId && 
                             attestation.response &&
@@ -100,7 +100,17 @@ module.exports = class Login {
                     reject({message:"invalid attestation"})
                     return
                 } 
-                
+
+                if(handle.indexOf("ANON_") < 0){
+                    let error = {
+                        code: 600,
+                        message: "invalid anonymous handle. Please start with ANON_[uuid]"
+                    }
+                    reject(error); 
+                    return
+                } 
+               
+
                 this.apiService.request('POST', '/api/appuser/loginAnonymousComplete', attestation).then(result => {
                     if(result.code) reject(result);
                     else{ 
@@ -158,8 +168,10 @@ module.exports = class Login {
 
     /**
      * https://w3c.github.io/webauthn/#dictdef-registrationresponsejson
-     * @param {
+     * @param 
      *  handle: string,
+     *  {
+     * 
      *  id: Base64URLString;
      *  rawId: Base64URLString;
      *  response: {
@@ -172,11 +184,11 @@ module.exports = class Login {
      * } attestation 
      * @returns 
      */
-    signupConfirm(attestation){
+    signupConfirm(handle, attestation){
         return new Promise((resolve, reject) => {
             try { 
 
-                let valid = attestation.handle && 
+                let valid = handle && 
                             attestation.id && 
                             attestation.rawId && 
                             attestation.response &&
@@ -189,7 +201,7 @@ module.exports = class Login {
                     return
                 }
 
-                attestation.handle = attestation.handle.toLowerCase();
+                attestation.handle = handle.toLowerCase();
                 
                 this.apiService.request('POST','/api/appuser/signupConfirm', attestation).then(result => {
                     if(result.code) reject(result);
@@ -268,8 +280,9 @@ module.exports = class Login {
 
     /**
      * https://w3c.github.io/webauthn/#dictdef-authenticationresponsejson
-     * @param {
-     *      handle:string,
+     * @param 
+     * handle:string,
+     *  {
      *      id: Base64URLString;
      *      rawId: Base64URLString;
      *      response: {
@@ -280,15 +293,15 @@ module.exports = class Login {
      *          };
      *      authenticatorAttachment?: string; 
      *      type: string;
-     * } assertion
+     *  } assertion
      *  
      * @returns 
      */
-    loginComplete(assertion) {
+    loginComplete(handle, assertion) {
         return new Promise((resolve, reject) => {
             try { 
 
-                let valid = assertion.handle && 
+                let valid = handle && 
                 assertion.id && 
                 assertion.rawId && 
                 assertion.response.clientDataJSON && 
@@ -300,6 +313,7 @@ module.exports = class Login {
                     return
                 }
 
+                assertion.handle = handle.toLowerCase();
                 
                 this.apiService.request('POST', '/api/appuser/loginComplete', assertion).then(result => {
                     if(result && result['access-token']){  
@@ -365,7 +379,6 @@ module.exports = class Login {
                     return
                 }
 
-
                 this.apiService.request('POST', '/api/appuser/socialSignup', data).then(result => {
                     if(result && result['access-token']){ 
                         
@@ -414,28 +427,28 @@ module.exports = class Login {
 
      /**
      * https://w3c.github.io/webauthn/#dictdef-authenticationresponsejson
-     * @param {
-     *  
-     *      handle:string,
-     *      id: Base64URLString;
-     *      rawId: Base64URLString;
-     *      response: {
-     *          clientDataJSON:Base64URLString,
-     *          authenticatorData:Base64URLString,
-     *          signature:Base64URLString,
-     *          userHandle?: Base64URLString
-     *          };
-     *      authenticatorAttachment?: string; 
-     *      type: string
+     * @param 
+     * handle:string,
+     * {  
+    *      id: Base64URLString;
+    *      rawId: Base64URLString;
+    *      response: {
+    *          clientDataJSON:Base64URLString,
+    *          authenticatorData:Base64URLString,
+    *          signature:Base64URLString,
+    *          userHandle?: Base64URLString
+    *          };
+    *      authenticatorAttachment?: string; 
+    *      type: string
      * } assertion
      *  
      * @returns 
      */
-    verifyComplete(assertion) {
+    verifyComplete(handle, assertion) {
         return new Promise((resolve, reject) => {
             try { 
 
-                let valid = assertion.handle && 
+                let valid = handle && 
                 assertion.id && 
                 assertion.rawId && 
                 assertion.response.clientDataJSON && 
@@ -446,6 +459,8 @@ module.exports = class Login {
                     reject({message:"invalid assertion"})
                     return
                 }
+
+                assertion.handle = handle.toLowerCase();
 
                 this.apiService.request('POST', '/api/appuser/verifyComplete', assertion).then(result => {
                     if(result && result['access-token']){ 

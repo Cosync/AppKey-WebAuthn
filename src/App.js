@@ -35,16 +35,14 @@ module.exports = class App {
      * @param {*} apiService 
      */
     constructor(apiService) {
-        this.apiService = apiService;
-
-        this.getApplication()
+        this.apiService = apiService;  
     } 
 
     /**
      * 
-     * @returns 
+     * @returns application object
      */
-    getApplication(){
+    getApp(){
         return new Promise((resolve, reject) => {  
             try { 
                 this.apiService.request("GET", '/api/appuser/app').then(result => {

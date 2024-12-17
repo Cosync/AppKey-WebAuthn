@@ -41,14 +41,24 @@ module.exports = class Profile {
 
     /**
      * 
-     * @returns 
+     * @returns application user
      */
-    getUser(){
+    getAppUser(){
         return new Promise((resolve, reject) => {  
+            try {
+                this.apiService.request('GET', '/api/appuser/user').then(result => { 
+
+                    if(result.code) reject(result);
+                    else{ 
+                        this.apiService.user = result;
+                        resolve(result);
+                    } 
+
+                }).catch((error) => reject(error)); 
+            } catch (error) {
+                reject(error);
+            }
             
-            this.apiService.request('GET', '/api/appuser/getUser').then(result => { 
-                resolve(result);
-            }); 
         })
     }
 
@@ -181,7 +191,6 @@ module.exports = class Profile {
 
     
  
-
 }
  
        
