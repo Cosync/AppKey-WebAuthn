@@ -30,6 +30,7 @@
 
 let _user = null;
 
+
 module.exports = class Authenticator { 
 
     /**
@@ -89,6 +90,7 @@ module.exports = class Authenticator {
     loginAnonymousComplete(handle, attestation){
         return new Promise((resolve, reject) => { 
             try { 
+                let that = this;
                 let valid = handle && 
                             attestation.id && 
                             attestation.rawId && 
@@ -114,9 +116,7 @@ module.exports = class Authenticator {
                 this.apiService.request('POST', '/api/appuser/loginAnonymousComplete', attestation).then(result => {
                     if(result.code) reject(result);
                     else{ 
-                        _user = result;
-                        this.apiService.user = _user;
-
+                        that.user = result; 
                         resolve(result);
                     } 
                 }).catch((error) => reject(error)); 
@@ -226,6 +226,7 @@ module.exports = class Authenticator {
     signupComplete(data){
         return new Promise((resolve, reject) => {
             try { 
+                let that = this;
                 let valid = data.code; 
                 if(!valid){
                     reject({message:"invalid singup data"})
@@ -235,8 +236,7 @@ module.exports = class Authenticator {
                 this.apiService.request('POST', '/api/appuser/signupComplete', {code:data.code}).then(result => {
                     if(result.code) reject(result);
                     else { 
-                        _user = result;
-                        this.apiService.user = _user;
+                        that.user = result;
                         this.apiService.signData = null;
                         
                         resolve(result);
@@ -300,7 +300,7 @@ module.exports = class Authenticator {
     loginComplete(handle, assertion) {
         return new Promise((resolve, reject) => {
             try { 
-
+                let that = this;
                 let valid = handle && 
                 assertion.id && 
                 assertion.rawId && 
@@ -317,8 +317,7 @@ module.exports = class Authenticator {
                 
                 this.apiService.request('POST', '/api/appuser/loginComplete', assertion).then(result => {
                     if(result && result['access-token']){  
-                        _user = result;
-                        this.apiService.user = _user;
+                        that.user = result;
                         resolve(result);
                     } 
                     else reject(result);
@@ -346,13 +345,12 @@ module.exports = class Authenticator {
                     return
                 }
 
-
+                let that = this;
                 this.apiService.request('POST', '/api/appuser/socialLogin', data).then(result => { 
 
                     if(result && result['access-token']){ 
                          
-                        _user = result;
-                        this.apiService.user = _user;
+                        that.user = result;
                         resolve(result);
                     } 
                     else reject(result);
@@ -378,12 +376,11 @@ module.exports = class Authenticator {
                     reject({message:"invalid data"})
                     return
                 }
-
+                let that = this;
                 this.apiService.request('POST', '/api/appuser/socialSignup', data).then(result => {
                     if(result && result['access-token']){ 
                         
-                        _user = result;
-                        this.apiService.user = _user;
+                        that.user = result;
                         resolve(result);
                     } 
                     else reject(result);
@@ -461,12 +458,10 @@ module.exports = class Authenticator {
                 }
 
                 assertion.handle = handle.toLowerCase();
-
+                let that = this;
                 this.apiService.request('POST', '/api/appuser/verifyComplete', assertion).then(result => {
-                    if(result && result['access-token']){ 
-                        
-                        _user = result;
-                        this.apiService.user = _user;
+                    if(result && result['access-token']){  
+                        that.user = result;
                         resolve(result);
                     } 
                     else reject(result);
@@ -493,12 +488,10 @@ module.exports = class Authenticator {
                     reject({message:"invalid data"})
                     return
                 }
-
+                let that = this;
                 this.apiService.request('POST', '/api/appuser/verifySocialAccount', data).then(result => {
                     if(result && result['access-token']){ 
-                         
-                        _user = result;
-                        this.apiService.user = _user;
+                        that.user = result;
                         resolve(result);
                     } 
                     else reject(result);
