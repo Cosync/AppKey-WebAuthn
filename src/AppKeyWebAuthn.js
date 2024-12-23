@@ -138,5 +138,5 @@ class Singleton {
     }
   
 } 
+exports = module.exports = Singleton;
  
-module.exports = Singleton;

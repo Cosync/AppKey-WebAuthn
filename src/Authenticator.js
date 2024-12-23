@@ -73,8 +73,9 @@ module.exports = class Authenticator {
 
      /**
      * https://w3c.github.io/webauthn/#dictdef-registrationresponsejson
-     * @param {
-     *  handle: string,
+     * @param 
+     * handle: string,
+     * {
      *  id: Base64URLString;
      *  rawId: Base64URLString;
      *  response: {

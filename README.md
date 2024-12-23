@@ -37,7 +37,7 @@ For self-hosted versions of the AppKey server, the **REST_API** is the HTTPS RES
 
 ```
    
-let application = await appKeyAuth.app.getApplication();
+let application = await appKeyAuth.app.getApp();
 
 let result = await appKeyAuth.auth.login({handle:'user_email@appkey.io'});
 
@@ -49,9 +49,9 @@ let result = await appKeyAuth.auth.login({handle:'user_email@appkey.io'});
 
 **none**
 
-## getApplication
+## getApp
 
-The *getApplication()* function is used by the client application to get information about the application within AppKey. The *getApplication()* function will save user information inside member variables of the **AppKeyAPIManager.shared** object. These member variables include the following information:
+The *getApp()* function is used by the client application to get information about the application within AppKey. The *getApp()* function will save user information inside member variables of the **AppKeyAPIManager.shared** object. These member variables include the following information:
 
 * **application** : application object
 
@@ -79,7 +79,7 @@ The Application object contains the following fields
 * **locales** : [String] - list of locales support by application
 
 ```
-    let application = await appKeyAuth.app.getApplication();
+    let application = await appKeyAuth.app.getApp();
 ```
 
 ### Parameters
@@ -90,7 +90,7 @@ None
 
 ```
     try {
-	let application = await appKeyAuth.app.getApplication();
+	let application = await appKeyAuth.app.getApp();
 
     } catch (error) {
 	console.error("getApp error ", error.message)
@@ -149,7 +149,11 @@ If an error occurs in the call to the function, a error exceptions will be throw
 
 **handle** : String - this contains the user's handle (email or phone). 
 
-**attest** : Attestation - this contains the user's attestation object
+**atttestationObject** : Attestation - this contains the user's attestation object
+
+
+To create attestation object please see a SimpleWebAuthn Library at https://github.com/MasterKale/SimpleWebAuthn 
+or see our demo react website and react app projects code at https://github.com/Cosync/AppKey-WebReactDemo, https://github.com/Cosync/AppKey-ReactNativeDemo, https://github.com/Cosync/AppKey-ReactExpoDemo
 
 
 ### Example
@@ -261,6 +265,8 @@ If an error occurs in the call to the function, an error exception will be throw
 
 **handle** : String - this contains the user's handle (email or phone). 
 **assertion** : Object - this contains the Assertion object
+
+To create assertion object please see a SimpleWebAuthn Library at https://github.com/MasterKale/SimpleWebAuthn or see our demo react website and react app projects code at https://github.com/Cosync/AppKey-WebReactDemo, https://github.com/Cosync/AppKey-ReactNativeDemo, https://github.com/Cosync/AppKey-ReactExpoDemo
 
 ### Example
 
