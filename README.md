@@ -117,18 +117,18 @@ The *signup()* function is responsible for registering a new user handle (email 
 If an error occurs in the call to the function, a AppKeyError exceptions will be thrown.
 
 ### Parameters
-
+An object contains:
 **handle** : String - this contains the user's handle (email or phone). 
 
 **displayName** : String - this contains the user's display name.
 
-**locale** : String - 2 letter **locale** for the user
+**locale** : (Optional) String - 2 letter **locale** for the user
 
 ### Example
 
 ```
     try {
-	let result = await appKeyAuth.auth.signup('user_email@appkey.io', 'Demo User')
+	let result = await appKeyAuth.auth.signup({handle:'user_email@appkey.io', displayName:'Demo User'})
 
     } catch (error) {
 	console.error("signup error ", error.message)
@@ -150,7 +150,21 @@ If an error occurs in the call to the function, a error exceptions will be throw
 **handle** : String - this contains the user's handle (email or phone). 
 
 **atttestationObject** : Attestation - this contains the user's attestation object
+``` 
+Atttestation Object Properties: 
+    {
 
+      id: Base64URLString;
+      rawId: Base64URLString;
+      response: {
+          clientDataJSON: Base64URLString;
+          attestationObject: Base64URLString;
+          authenticatorData?: Base64URLString; 
+        };
+      authenticatorAttachment?: string; 
+      type: string;
+    }
+```
 
 To create attestation object please see a SimpleWebAuthn Library at https://github.com/MasterKale/SimpleWebAuthn 
 or see our demo react website and react app projects code at https://github.com/Cosync/AppKey-WebReactDemo, https://github.com/Cosync/AppKey-ReactNativeDemo, https://github.com/Cosync/AppKey-ReactExpoDemo
@@ -266,6 +280,23 @@ If an error occurs in the call to the function, an error exception will be throw
 **handle** : String - this contains the user's handle (email or phone). 
 **assertion** : Object - this contains the Assertion object
 
+
+```
+    Assertion Object Properties:
+    {
+        id: Base64URLString;
+        rawId: Base64URLString;
+        response: {
+            clientDataJSON:Base64URLString,
+            authenticatorData:Base64URLString,
+            signature:Base64URLString,
+            userHandle?: Base64URLString
+        };
+        authenticatorAttachment?: string; 
+        type: string;
+    }
+
+```
 To create assertion object please see a SimpleWebAuthn Library at https://github.com/MasterKale/SimpleWebAuthn or see our demo react website and react app projects code at https://github.com/Cosync/AppKey-WebReactDemo, https://github.com/Cosync/AppKey-ReactNativeDemo, https://github.com/Cosync/AppKey-ReactExpoDemo
 
 ### Example
@@ -290,13 +321,14 @@ This function will only work if the anonymous login capability is enable with th
 The *loginAnonymous()* function initiates the anonymous passkey login process with the application. The function is passed a uuidString string, which is used to create the anonymous handle. That way, if the client wishes to reuse an anonymous handle, it can do so by reusing the same uuidString paramter. This function returns an *Signup Challenge* object, which includes a challenge that the client must sign using the private key stored in the device’s keychain. This step ensures the user’s anonymous identity is verified securely.
 
 ```
-    await appKeyAuth.auth.loginAnonymous({handle: String})  
+    await appKeyAuth.auth.loginAnonymous({handle: String})
 ```
 
 If an error occurs in the call to the function, an error exception will be thrown.
 
 
 ### Parameters
+An object contains:
 
 **handle** : String - this contains a unique string for the anonymous user and must start with ANON_ (e.g. `ANON_${random_string}`)
 
@@ -306,7 +338,7 @@ If an error occurs in the call to the function, an error exception will be throw
    
     try {
         let uuid = UUID()
-        let result =  await appKeyAuth.auth.loginAnonymous(`ANON_${uuid}`)
+        let result =  await appKeyAuth.auth.loginAnonymous({handle:`ANON_${uuid}`})
     } catch (error) {
         
     }
@@ -338,7 +370,7 @@ The AppUser object contains the following fields
 * **lastLogin** :  String? - date stamp of last login
 
 ```
-    await appKeyAuth.auth.loginAnonymousComplete({handle, atttestationObject})  
+    await appKeyAuth.auth.loginAnonymousComplete(handle, atttestationObject)  
 ```
 If an error occurs in the call to the function, an error exception will be thrown.
 
@@ -356,6 +388,85 @@ If an error occurs in the call to the function, an error exception will be throw
          
     }
 ```
+
+
+## socialLogin 
+
+The *sociallogin()* function is used to login into a user's account using a social login provider. Currently AppKey Server supports both 'apple' and 'google' as social login providers. If the social login is successful it will return a user object to the caller that is the same as loginComplete function. 
+
+To use the socialLogin feature, first make sure to enable and configure it in your AppKey application at appkey.io for Apple and/or Google. Next, incorporate any Apple and/or Google social login library into your project; refer to our demo projects for guidance on implementing this social login feature at:
+
+1, https://github.com/Cosync/AppKey-WebReactDemo
+2, https://github.com/Cosync/AppKey-ReactNativeDemo
+3, https://github.com/Cosync/AppKey-ReactExpoDemo
+
+* **jwt**: the JWT token of the logged in user
+* **accessToken**: the access token of the logged in user
+
+```
+    await appKeyAuth.auth.socialLogin({token: String, provider: String})
+```
+
+If an error occurs in the call to the function, a CosyncAuthError exceptions will be thrown.
+
+
+### Parameters
+An object contains:
+**token** : String - this is the login token returned by the provider
+
+**provider** : String - this contains the social provider either 'apple' or 'google'
+
+### Example
+
+```
+    try {
+        await appKeyAuth.auth.socialLogin({token:"apple_auth_token", provider:"apple"})
+    } catch (error) {
+         
+    }
+
+    
+```
+
+## socialSignup
+
+The *socialSignup()* function is used to signup a user with a AppKey server using a social provider. 
+
+
+This function will sign up a user to the AppKey service using a social account `token``. Currently, the AppKey system supports both Apple Id and Google social login protocols. This function receives the social token from the social login provider and a provider string that specifies the social provider (for instance, ‘apple’ or ‘google’).
+
+If successful, this function will return a user object for the newly signed up user. The **socialSignup** function will not succeed if a user email account has previously been established for the ’email’ provider or if an account with an alternative social provider already exists for the same email. 
+
+This function can be passed an optional locale parameter, which specifies the user’s locale.
+
+To utilize this socialLogin feature, first ensure you enable and set it up in your AppKey application at appkey.io for Apple and/or Google.
+
+```
+await appKeyAuth.auth.socialSignup({token: String, provider: String, handle:string, locale:string})
+     
+``` 
+ 
+
+### Parameters
+An object contains:
+
+**token** : String - this is the login token returned by the provider
+
+**provider** : String - this contains the social provider either 'apple' or 'google'
+
+**handle** : String - this contains the user's email (Apple Id or Google account)  
+
+**locale** : String - 2 letter **locale** for the user
+
+
+### Example
+
+```
+    await socialSignup({token: String, provider: String, handle:String, locale:String})
+```
+
+
+
 
 ## verify
 
