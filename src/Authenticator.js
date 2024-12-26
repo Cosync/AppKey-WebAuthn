@@ -221,7 +221,7 @@ module.exports = class Authenticator {
 
     /**
      * 
-     * @param { handle:string, code:string} data 
+     * @param { code:string} data 
      * @returns 
      */
     signupComplete(data){

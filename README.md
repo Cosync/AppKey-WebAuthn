@@ -396,9 +396,9 @@ The *sociallogin()* function is used to login into a user's account using a soci
 
 To use the socialLogin feature, first make sure to enable and configure it in your AppKey application at appkey.io for Apple and/or Google. Next, incorporate any Apple and/or Google social login library into your project; refer to our demo projects for guidance on implementing this social login feature at:
 
-1, https://github.com/Cosync/AppKey-WebReactDemo
-2, https://github.com/Cosync/AppKey-ReactNativeDemo
-3, https://github.com/Cosync/AppKey-ReactExpoDemo
+1. https://github.com/Cosync/AppKey-WebReactDemo
+2. https://github.com/Cosync/AppKey-ReactNativeDemo
+3. https://github.com/Cosync/AppKey-ReactExpoDemo
 
 * **jwt**: the JWT token of the logged in user
 * **accessToken**: the access token of the logged in user
