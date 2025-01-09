@@ -31,8 +31,8 @@ const App = require('./App');
 const Profile = require("./Profile"); 
 const Authenticator = require("./Authenticator"); 
 const APIService = require("./APIService"); 
-
-let _profile, _app, _auth, _config, _apiService; 
+const Passkey = require("./Passkey"); 
+let _profile, _passkey, _app, _auth, _config, _apiService; 
 let _user;
 
 class AppKeyWebAuthn {
@@ -63,7 +63,7 @@ class AppKeyWebAuthn {
         _app = new App(_apiService);
         _auth = new Authenticator(_apiService); 
         _profile = new Profile(_apiService);
-
+        _passkey = new Passkey(_apiService)
         
     }
 
@@ -100,6 +100,15 @@ class AppKeyWebAuthn {
      */
     get profile(){
         return _profile;
+    } 
+
+
+    /**
+     * 
+     * @returns passkey class
+     */
+    get passkey(){
+        return _passkey;
     } 
     
  
