@@ -22,11 +22,10 @@
 //
 //  Created by Tola Voeung.
 //  Copyright © 2024 cosync. All rights reserved.
-// 
-
-
-let _user = {};
+//  
+ 
 let _signData = {};
+let _userData = {};
 
 module.exports  = class APIService {
     
@@ -48,14 +47,6 @@ module.exports  = class APIService {
         this.appkeyConfig = config;
 
         
-    } 
-
-    set user (user){
-        _user = user
-    }
-
-    get user (){
-        return _user
     }
 
     set signData (data){
@@ -65,7 +56,16 @@ module.exports  = class APIService {
     get signData (){
         return _signData
     }
+
+    set user (data){
+        _userData = data
+    }
+
+    get user (){
+        return _userData
+    }
  
+
 
     /**
      * 
@@ -88,7 +88,7 @@ module.exports  = class APIService {
         
                 if(method != "GET" && data) option.body = JSON.stringify(data);  
         
-                if(_user && _user['access-token']) option.headers['access-token'] = _user['access-token'];
+                if(_userData && _userData['access-token']) option.headers['access-token'] = _userData['access-token'];
                 else if (_signData && _signData['signup-token']) option.headers['signup-token'] = _signData['signup-token'];
                 else option.headers['app-token'] = this.appkeyConfig.appToken; 
         

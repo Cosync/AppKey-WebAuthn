@@ -28,8 +28,8 @@
 
 'use strict';  
 
-let _user = null;
-
+ 
+let _apiService = null;
 
 module.exports = class Authenticator { 
 
@@ -37,8 +37,8 @@ module.exports = class Authenticator {
      * 
      * @param {*} apiService 
      */
-    constructor(apiService) {
-        this.apiService = apiService;
+    constructor(apiInstance) {
+        _apiService = apiInstance;
     } 
 
     /**
@@ -58,7 +58,7 @@ module.exports = class Authenticator {
                     return
                 } 
 
-                this.apiService.request('POST', '/api/appuser/loginAnonymous', data).then(result => {
+                _apiService.request('POST', '/api/appuser/loginAnonymous', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
                         resolve(result);
@@ -114,7 +114,7 @@ module.exports = class Authenticator {
                 } 
                
 
-                this.apiService.request('POST', '/api/appuser/loginAnonymousComplete', attestation).then(result => {
+                _apiService.request('POST', '/api/appuser/loginAnonymousComplete', attestation).then(result => {
                     if(result.code) reject(result);
                     else{ 
                         that.user = result; 
@@ -153,7 +153,7 @@ module.exports = class Authenticator {
 
                 data.handle = data.handle.toLowerCase();
 
-                this.apiService.request('POST', '/api/appuser/signup', data).then(result => {
+                _apiService.request('POST', '/api/appuser/signup', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
                         resolve(result);
@@ -204,10 +204,10 @@ module.exports = class Authenticator {
 
                 attestation.handle = handle.toLowerCase();
                 
-                this.apiService.request('POST','/api/appuser/signupConfirm', attestation).then(result => {
+                _apiService.request('POST','/api/appuser/signupConfirm', attestation).then(result => {
                     if(result.code) reject(result);
                     else { 
-                        this.apiService.signData = result;
+                        _apiService.signData = result;
                         resolve(result);
                     } 
                 }).catch((error) => reject(error)); 
@@ -234,11 +234,11 @@ module.exports = class Authenticator {
                     return
                 }
                 
-                this.apiService.request('POST', '/api/appuser/signupComplete', {code:data.code}).then(result => {
+                _apiService.request('POST', '/api/appuser/signupComplete', {code:data.code}).then(result => {
                     if(result.code) reject(result);
                     else { 
                         that.user = result;
-                        this.apiService.signData = null;
+                        _apiService.signData = null;
                         
                         resolve(result);
                     } 
@@ -266,7 +266,7 @@ module.exports = class Authenticator {
                     return
                 }
                 data.handle = data.handle.toLowerCase();
-                this.apiService.request('POST', '/api/appuser/login', data).then(result => {
+                _apiService.request('POST', '/api/appuser/login', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
                         resolve(result);
@@ -316,7 +316,7 @@ module.exports = class Authenticator {
 
                 assertion.handle = handle.toLowerCase();
                 
-                this.apiService.request('POST', '/api/appuser/loginComplete', assertion).then(result => {
+                _apiService.request('POST', '/api/appuser/loginComplete', assertion).then(result => {
                     if(result && result['access-token']){  
                         that.user = result;
                         resolve(result);
@@ -347,7 +347,7 @@ module.exports = class Authenticator {
                 }
 
                 let that = this;
-                this.apiService.request('POST', '/api/appuser/socialLogin', data).then(result => { 
+                _apiService.request('POST', '/api/appuser/socialLogin', data).then(result => { 
 
                     if(result && result['access-token']){ 
                          
@@ -378,7 +378,7 @@ module.exports = class Authenticator {
                     return
                 }
                 let that = this;
-                this.apiService.request('POST', '/api/appuser/socialSignup', data).then(result => {
+                _apiService.request('POST', '/api/appuser/socialSignup', data).then(result => {
                     if(result && result['access-token']){ 
                         
                         that.user = result;
@@ -409,7 +409,7 @@ module.exports = class Authenticator {
                     return
                 }
                 data.handle = data.handle.toLowerCase();
-                this.apiService.request('POST', '/api/appuser/verify', data).then(result => {
+                _apiService.request('POST', '/api/appuser/verify', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
                     
@@ -460,7 +460,7 @@ module.exports = class Authenticator {
 
                 assertion.handle = handle.toLowerCase();
                 let that = this;
-                this.apiService.request('POST', '/api/appuser/verifyComplete', assertion).then(result => {
+                _apiService.request('POST', '/api/appuser/verifyComplete', assertion).then(result => {
                     if(result && result['access-token']){  
                         that.user = result;
                         resolve(result);
@@ -490,7 +490,7 @@ module.exports = class Authenticator {
                     return
                 }
                 let that = this;
-                this.apiService.request('POST', '/api/appuser/verifySocialAccount', data).then(result => {
+                _apiService.request('POST', '/api/appuser/verifySocialAccount', data).then(result => {
                     if(result && result['access-token']){ 
                         that.user = result;
                         resolve(result);
@@ -506,7 +506,7 @@ module.exports = class Authenticator {
 
     
     logout(){
-        this.apiService.user = null
+        _apiService.user = null;
     }
 
     /**
@@ -514,7 +514,7 @@ module.exports = class Authenticator {
      * @returns user object
      */
     get user(){
-        return _user;
+        return  _apiService.user;
     }
 
 
@@ -522,9 +522,8 @@ module.exports = class Authenticator {
      * @param {object} user  
      *   
      */
-    set user(user){
-        _user = user;
-        this.apiService.user = user;
+    set user(user){ 
+        _apiService.user = user;
     }
 
 

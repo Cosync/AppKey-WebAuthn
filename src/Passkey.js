@@ -28,15 +28,17 @@
 
 'use strict'; 
 
+let _apiService = null;
+
 module.exports = class Passkey { 
 
 
     /**
      * 
-     * @param {*} apiService 
+     * @param {*} apiInstance 
      */
-    constructor(apiService) {
-        this.apiService = apiService;
+    constructor(apiInstance) {
+        _apiService = apiInstance;
     } 
 
     /**
@@ -46,11 +48,10 @@ module.exports = class Passkey {
     addPasskey(){
         return new Promise((resolve, reject) => {  
             try {
-                this.apiService.request('POST', '/api/appuser/addPasskey').then(result => { 
+                _apiService.request('POST', '/api/appuser/addPasskey').then(result => { 
 
                     if(result.code) reject(result);
-                    else{ 
-                        this.apiService.user = result;
+                    else{  
                         resolve(result);
                     } 
 
@@ -84,7 +85,7 @@ module.exports = class Passkey {
     addPasskeyComplete(attestation){
         return new Promise((resolve, reject) => { 
             try { 
-                let that = this;
+                
                 let valid = attestation.id && 
                             attestation.rawId && 
                             attestation.response &&
@@ -97,10 +98,10 @@ module.exports = class Passkey {
                 }  
                 
 
-                this.apiService.request('POST', '/api/appuser/addPasskeyComplete', attestation).then(result => {
+                _apiService.request('POST', '/api/appuser/addPasskeyComplete', attestation).then(result => {
                     if(result.code) reject(result);
                     else{ 
-                        this.apiService.user = result; 
+                        _apiService.user = result; 
                         resolve(result);
                     } 
                 }).catch((error) => reject(error)); 
@@ -113,13 +114,17 @@ module.exports = class Passkey {
 
 
      /**
-     * 
+      *  * @param 
+     * {
+     *  keyId:string,
+     *  keyName:string
+     * }
      * @returns user object
      */
-    updatePasskey(keyId, keyName){
+    updatePasskey(data){
         return new Promise((resolve, reject) => {  
             try {
-                let valid = keyId && keyName
+                let valid = data.keyId && data.keyName
                 if(!valid){
                     let error = { 
                         message: "invalid data"
@@ -129,11 +134,11 @@ module.exports = class Passkey {
                 }
 
 
-                this.apiService.request('POST', '/api/appuser/updatePasskey', {keyId:keyId, keyName:keyName}).then(result => { 
+                _apiService.request('POST', '/api/appuser/updatePasskey', {keyId:data.keyId, keyName:data.keyName}).then(result => { 
 
                     if(result.code) reject(result);
                     else{ 
-                        this.apiService.user = result;
+                        _apiService.user = result; 
                         resolve(result);
                     } 
 
@@ -145,15 +150,19 @@ module.exports = class Passkey {
         })
     }
 
-     /**
-     * 
+      /**
+      *  * @param 
+     * {
+     *  keyId:string,
+     *   
+     * }
      * @returns user object
      */
-    removePasskey(keyId){
+    removePasskey(data){
         return new Promise((resolve, reject) => {  
             try {
 
-                let valid = keyId
+                let valid = data.keyId
                 if(!valid){
                     let error = { 
                         message: "invalid data"
@@ -162,11 +171,11 @@ module.exports = class Passkey {
                     return
                 }
 
-                this.apiService.request('POST', '/api/appuser/removePasskey',{keyId:keyId}).then(result => { 
+                _apiService.request('POST', '/api/appuser/removePasskey',{keyId:data.keyId}).then(result => { 
 
                     if(result.code) reject(result);
                     else{ 
-                        this.apiService.user = result;
+                        _apiService.user = result; 
                         resolve(result);
                     } 
 

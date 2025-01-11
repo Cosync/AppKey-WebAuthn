@@ -49,8 +49,7 @@ module.exports = class Profile {
                 this.apiService.request('GET', '/api/appuser/user').then(result => { 
 
                     if(result.code) reject(result);
-                    else{ 
-                        this.apiService.user = result;
+                    else{  
                         resolve(result);
                     } 
 
