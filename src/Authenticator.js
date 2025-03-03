@@ -58,6 +58,8 @@ module.exports = class Authenticator {
                     return
                 } 
 
+                this.logout();
+
                 _apiService.request('POST', '/api/appuser/loginAnonymous', data).then(result => {
                     if(result.code) reject(result);
                     else{ 
@@ -150,6 +152,8 @@ module.exports = class Authenticator {
                     reject(error); 
                     return
                 }
+               
+                this.logout();
 
                 data.handle = data.handle.toLowerCase();
 
@@ -260,11 +264,16 @@ module.exports = class Authenticator {
     login(data){
         return new Promise((resolve, reject) => { 
             try { 
+                 
+
                 let valid = data.handle; 
                 if(!valid){
                     reject({message:"invalid login data"})
                     return
                 }
+
+                this.logout();
+
                 data.handle = data.handle.toLowerCase();
                 _apiService.request('POST', '/api/appuser/login', data).then(result => {
                     if(result.code) reject(result);
@@ -346,7 +355,9 @@ module.exports = class Authenticator {
                     return
                 }
 
+                this.logout();
                 let that = this;
+                
                 _apiService.request('POST', '/api/appuser/socialLogin', data).then(result => { 
 
                     if(result && result['access-token']){ 
@@ -377,6 +388,7 @@ module.exports = class Authenticator {
                     reject({message:"invalid data"})
                     return
                 }
+                this.logout();
                 let that = this;
                 _apiService.request('POST', '/api/appuser/socialSignup', data).then(result => {
                     if(result && result['access-token']){ 
@@ -506,6 +518,7 @@ module.exports = class Authenticator {
 
     
     logout(){
+        _apiService.signData = null;
         _apiService.user = null;
     }
 

@@ -45,10 +45,11 @@ module.exports = class Passkey {
      * 
      * @returns key challenge
      */
-    addPasskey(){
+    addPasskey(data){
         return new Promise((resolve, reject) => {  
             try {
-                _apiService.request('POST', '/api/appuser/addPasskey').then(result => { 
+                
+                _apiService.request('POST', '/api/appuser/addPasskey', data).then(result => { 
 
                     if(result.code) reject(result);
                     else{  

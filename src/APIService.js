@@ -88,7 +88,8 @@ module.exports  = class APIService {
         
                 if(method != "GET" && data) option.body = JSON.stringify(data);  
         
-                if(_userData && _userData['access-token']) option.headers['access-token'] = _userData['access-token'];
+                if (data && data['access-token']) option.headers['access-token'] = data['access-token']; 
+                else if (_userData && _userData['access-token']) option.headers['access-token'] = _userData['access-token']; 
                 else if (_signData && _signData['signup-token']) option.headers['signup-token'] = _signData['signup-token'];
                 else option.headers['app-token'] = this.appkeyConfig.appToken; 
         
