@@ -1,6 +1,6 @@
 {
   "name": "appkey-webauthn",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "AppKey API service for passkey web authentication in NodeJS ",
   "main": "index.js",
   "scripts": {

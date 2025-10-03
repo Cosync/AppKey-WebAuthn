@@ -91,13 +91,14 @@ module.exports = class Profile {
 
     /**
      * 
-     * @param {displayName:string} data 
+     * @param {firstName:string} data 
+     * @param {lastName:string} data 
      * @returns  
      */
     updateProfile(data){
         return new Promise((resolve, reject) => {  
             try {
-                let valid = data.displayName;
+                let valid = data.firstName && data.lastName;
                 if(!valid){
                     reject({message:"invalid data"})
                     return

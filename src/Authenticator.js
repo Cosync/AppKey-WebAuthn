@@ -136,7 +136,8 @@ module.exports = class Authenticator {
      * 
      * @param {
      *   handle :string,
-     *   displayName :string,
+     *   firstName :string,
+     *   lastName :string,
      *   locale? :string
      * }
      * @returns 
@@ -144,7 +145,7 @@ module.exports = class Authenticator {
     signup(data){
         return new Promise((resolve, reject) => { 
             try { 
-                let valid = data.handle && data.displayName
+                let valid = data.handle && data.firstName && data.lastName;
                 if(!valid){
                     let error = { 
                         message: "invalid signup data"
