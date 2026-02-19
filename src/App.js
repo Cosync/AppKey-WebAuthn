@@ -58,6 +58,26 @@ module.exports = class App {
         })
     }
 
+    /**
+     * 
+     * @returns application object
+     */
+    makeAppQR(params){
+        return new Promise((resolve, reject) => {  
+            try { 
+                this.apiService.request("GET", `/api/qr/makeqr/${params}`).then(result => {
+                    if(result.code) reject(result);
+                    else{
+                        _application = result.app;
+                        resolve(result);
+                    } 
+                }).catch((error) => reject(error)); 
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
      /**
      * 
      * @returns application object
